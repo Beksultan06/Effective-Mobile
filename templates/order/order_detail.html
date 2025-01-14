@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали заказа</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <h1>Детали заказа #{{ order.id }}</h1>
+
+    <p><strong>Номер стола:</strong> {{ order.table_number }}</p>
+
+    <h2>Список заказанных блюд:</h2>
+    <ul>
+        {% for item in order.items %}
+        <li><strong>{{ item.name }}:</strong> {{ item.price }} руб.</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Общая стоимость:</strong> {{ order.total_price }} руб.</p>
+
+    <p><strong>Статус заказа:</strong> {{ order.status }}</p>
+
+    <a href="{% url 'order-update' order.id %}">Обновить статус заказа</a><br>
+    <a href="{% url 'order-delete' order.id %}">Удалить заказ</a><br>
+    <a href="{% url 'order-list' %}">Назад к списку заказов</a>
+</body>
+
+</html>

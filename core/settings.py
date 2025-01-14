@@ -34,9 +34,14 @@ INSTALLED_APPS = [
     "ckeditor",
     "rest_framework",
     "drf_yasg",
+    'django_filters',
 
     "app.cafe",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
