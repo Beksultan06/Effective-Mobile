@@ -23,10 +23,7 @@ def order_list(request):
         print(f"Ошибка API: {e}")
         orders = []
 
-    return render(request, 'order/order_list.html', {
-        'orders': orders,
-        'search_query': search_query
-    })
+    return render(request, 'order/order_list.html', {'orders': orders, 'search_query': search_query})
 
 def order_create(request):
     """
@@ -119,7 +116,4 @@ def revenue(request):
         total_revenue = 0
         paid_orders = []
 
-    return render(request, 'revenue.html', {
-        'total_revenue': total_revenue,
-        'paid_orders': paid_orders,
-    })
+    return render(request, 'revenue.html', {'total_revenue': total_revenue, 'paid_orders': paid_orders,})

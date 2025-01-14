@@ -9,9 +9,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="SafeJurt",
+        title="Cafe",
         default_version='v1',
-        description="SafeJurt description",
+        description="Cafe description",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="nurlanuuulubeksultan@gmail.com"),
         license=openapi.License(name="BSD License"),
