@@ -7,12 +7,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список заказов</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/order-list.css' %}">
 </head>
 
 <body>
     <h1>Список заказов</h1>
-    <a href="{% url 'order-create' %}">Создать новый заказ</a>
+    <form method="get" action="{% url 'order-list' %}">
+        <input type="text" name="search" placeholder="Поиск по номеру стола или статусу" value="{{ search_query }}">
+        <button type="submit">Поиск</button>
+    </form>
+    <a href="{% url 'order-create' %}" class="create-order">Создать новый заказ</a>
     <table>
         <thead>
             <tr>
@@ -25,6 +30,7 @@
             </tr>
         </thead>
         <tbody>
+            {% if orders %}
             {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
@@ -35,14 +41,21 @@
                     {% endfor %}
                 </td>
                 <td>{{ order.total_price }}</td>
-                <td>{{ order.get_status_display }}</td>
+                <td>{{ order.status }}</td>
                 <td>
-                    <a href="{% url 'order-detail' order.id %}">Детали</a>
                     <a href="{% url 'order-update' order.id %}">Обновить</a>
+                    <br>
                     <a href="{% url 'order-delete' order.id %}">Удалить</a>
+                    <br>
+                    <a href="{% url 'order-detail' order.id %}">Просмотреть детально</a>
                 </td>
             </tr>
             {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" class="no-orders">Нет заказов, соответствующих вашему запросу.</td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
 </body>

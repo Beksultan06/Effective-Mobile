@@ -3,7 +3,8 @@ from api.views.order import (OrderListApiView,
                              OrderCreateAPIView,
                              OrderUpdateAPIView,
                              OrderDestroyAPIView,
-                             OrderRetrieveAPIView)
+                             OrderRetrieveAPIView,
+                             RevenueAPIView)
 
 urlpatterns = [
     path('orders/', OrderListApiView.as_view(), name='order-list'),  # Список всех заказов
@@ -11,4 +12,5 @@ urlpatterns = [
     path('orders/<int:pk>/', OrderRetrieveAPIView.as_view(), name='order-detail'),  # Детали заказа по ID
     path('orders/<int:pk>/update/', OrderUpdateAPIView.as_view(), name='order-update'),  # Обновление заказа
     path('orders/<int:pk>/delete/', OrderDestroyAPIView.as_view(), name='order-delete'),  # Удаление заказа
+    path('revenue/', RevenueAPIView.as_view(), name='calculate-revenue'),
 ]

@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчет выручки</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Расчет выручки за смену</h1>
+    <div class="container">
+        <h2>Общая выручка: {{ total_revenue }} руб.</h2>
+        {% if paid_orders %}
+        <h3>Список оплаченных заказов:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Номер стола</th>
+                    <th>Общая стоимость</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in paid_orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.table_number }}</td>
+                    <td>{{ order.total_price }} руб.</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Нет оплаченных заказов за смену.</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'order-list' %}">Назад к списку заказов</a>
+</body>
+</html>

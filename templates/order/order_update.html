@@ -11,15 +11,28 @@
 </head>
 
 <body>
-    <h1>Обновление статуса заказа #{{ order.id }}</h1>
+    <h1>Обновление заказа #{{ order.id }}</h1>
     <form method="POST">
         {% csrf_token %}
+        <label for="customer_name">Номер стола</label>
+        <input type="text" id="customer_name" name="customer_name" value="{{ order.customer_name }}">
+
         <label for="status">Статус заказа</label>
         <select name="status" id="status">
-            <option value="pending" {% if order.status=='pending' %}selected{% endif %}>В ожидании</option>
-            <option value="ready" {% if order.status=='ready' %}selected{% endif %}>Готово</option>
-            <option value="paid" {% if order.status=='paid' %}selected{% endif %}>Оплачено</option>
+            {% if order.status == 'pending' %}
+            <option value="pending" selected>В ожидании</option>
+            {% elif order.status == 'ready' %}
+            <option value="ready" selected>Готово</option>
+            {% elif order.status == 'paid' %}
+            <option value="paid" selected>Оплачено</option>
+            {% endif %}
+            <option value="pending">В ожидании</option>
+            <option value="ready">Готово</option>
+            <option value="paid">Оплачено</option>
         </select>
+
+        <label for="total_price">Сумма заказа</label>
+        <input type="number" id="total_price" name="total_price" value="{{ order.total_price }}">
         <button type="submit">Обновить</button>
     </form>
     <a href="{% url 'order-list' %}">Назад к списку заказов</a>
