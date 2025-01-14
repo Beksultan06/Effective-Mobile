@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обновление статуса заказа</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <h1>Обновление статуса заказа #{{ order.id }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="status">Статус заказа</label>
+        <select name="status" id="status">
+            <option value="pending" {% if order.status=='pending' %}selected{% endif %}>В ожидании</option>
+            <option value="ready" {% if order.status=='ready' %}selected{% endif %}>Готово</option>
+            <option value="paid" {% if order.status=='paid' %}selected{% endif %}>Оплачено</option>
+        </select>
+        <button type="submit">Обновить</button>
+    </form>
+    <a href="{% url 'order-list' %}">Назад к списку заказов</a>
+</body>
+
+</html>

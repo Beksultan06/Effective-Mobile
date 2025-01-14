@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "ckeditor",
     "rest_framework",
     "drf_yasg",
+
+    "app.cafe",
 ]
 
 MIDDLEWARE = [
@@ -51,7 +53,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'src/templates'],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -168,3 +170,6 @@ CKEDITOR_CONFIGS = {
         'width': 800,
     },
 }
+
+CSRF_COOKIE_SECURE = False  # Для локальной разработки
+CSRF_COOKIE_HTTPONLY = True
