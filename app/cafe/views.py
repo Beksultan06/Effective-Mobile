@@ -93,24 +93,26 @@ def order_delete(request, pk):
 def revenue(request):
     """
     Расчет общего объема выручки за заказы со статусом 'оплачено'.
-    Данные берутся через API, созданное через RevenueAPIView.
+    Данные берутся через API, созданное через PaidOrdersRevenueAPIView.
     """
     api_url = f"{settings.API_BASE_URL}/api/revenue/"
     try:
         response = requests.get(api_url)
-        # Логируем текст ответа для отладки
-        print(response.text)  # Выводим содержимое ответа
+        print(f"API Response: {response.text}")
         response.raise_for_status()
-        data = response.json()
-
-        # Проверяем на наличие ошибки в ответе
-        if 'error' in data:
-            print(f"Ошибка от API: {data['error']}")
+        if not response.text.strip():
+            print("API вернул пустой ответ.")
             total_revenue = 0
             paid_orders = []
         else:
-            total_revenue = data.get('total_revenue', 0)
-            paid_orders = data.get('paid_orders', [])
+            data = response.json()
+            if 'error' in data:
+                print(f"Ошибка от API: {data['error']}")
+                total_revenue = 0
+                paid_orders = []
+            else:
+                total_revenue = data.get('total_revenue', 0)
+                paid_orders = data.get('paid_orders', [])
 
     except requests.RequestException as e:
         print(f"Ошибка при запросе к API: {e}")
