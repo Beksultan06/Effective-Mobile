@@ -1,29 +1,62 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+import urllib.parse
 from app.cafe.models import Order
 from .forms import OrderForm
 from django.conf import settings
 import requests
 
+
 def order_list(request):
     """
-    Отображает все заказы в таблице с использованием API
+    Отображает все заказы с использованием API с учетом пагинации.
     """
     api_url = f"{settings.API_BASE_URL}/api/orders/"
     search_query = request.GET.get('search', '')
-    params = {}
-    if search_query:
-        params['search'] = search_query
+    current_page = int(request.GET.get('page', 1))  # Преобразуем в целое число
+    params = {
+        'search': search_query,
+        'page': current_page,  # Текущая страница
+    }
+
     try:
         response = requests.get(api_url, params=params, timeout=5)
         response.raise_for_status()
-        print(f"Успешный запрос: {response.url}")
-        orders = response.json()
+        data = response.json()
+        orders = data.get('results', [])
+
+        # Обработка ссылок пагинации
+        next_page = data.get('next')  # Ссылка на следующую страницу
+        prev_page = data.get('previous')  # Ссылка на предыдущую страницу
+
+        # Если есть ссылка на следующую страницу, извлекаем номер страницы
+        if next_page:
+            next_page_params = urllib.parse.parse_qs(urllib.parse.urlparse(next_page).query)
+            next_page = next_page_params.get('page', [None])[0]
+
+        # Если есть ссылка на предыдущую страницу, извлекаем номер страницы
+        if prev_page:
+            prev_page_params = urllib.parse.parse_qs(urllib.parse.urlparse(prev_page).query)
+            prev_page = prev_page_params.get('page', [None])[0]
+
+        print(f"Обработанная следующая страница: {next_page}")
+        print(f"Обработанная предыдущая страница: {prev_page}")
+
     except requests.RequestException as e:
         print(f"Ошибка API: {e}")
         orders = []
+        next_page = prev_page = None
 
-    return render(request, 'order/order_list.html', {'orders': orders, 'search_query': search_query})
+    return render(request, 'order/order_list.html', {
+        'orders': orders,
+        'search_query': search_query,
+        'next_page': next_page,
+        'prev_page': prev_page,
+        'current_page': current_page,  # Передаем текущую страницу для шаблона
+    })
+
+
+
 
 def order_create(request):
     """
@@ -117,3 +150,6 @@ def revenue(request):
         paid_orders = []
 
     return render(request, 'revenue.html', {'total_revenue': total_revenue, 'paid_orders': paid_orders,})
+
+def errors(request, exception):
+    return render(request, "404/404.html", status=404)

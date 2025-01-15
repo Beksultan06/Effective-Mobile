@@ -43,11 +43,15 @@
                 <td>{{ order.total_price }}</td>
                 <td>{{ order.status }}</td>
                 <td>
+                    {% if order.id %}
                     <a href="{% url 'order-update' order.id %}">Обновить</a>
                     <br>
                     <a href="{% url 'order-delete' order.id %}">Удалить</a>
                     <br>
                     <a href="{% url 'order-detail' order.id %}">Просмотреть детально</a>
+                    {% else %}
+                    <span>Нет действий</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -56,9 +60,22 @@
                 <td colspan="6" class="no-orders">Нет заказов, соответствующих вашему запросу.</td>
             </tr>
             {% endif %}
-            <a class="revenue" href="{% url 'revenue' %}">Подсчёты</a>
         </tbody>
     </table>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+        {% if prev_page %}
+        <a href="?page={{ prev_page }}&search={{ search_query }}">Предыдущая страница</a>
+        {% endif %}
+        
+        {% if next_page %}
+        <a href="?page={{ next_page }}&search={{ search_query }}">Следующая страница</a>
+        {% endif %}
+
+    </div>
+
+    <a class="revenue" href="{% url 'revenue' %}">Подсчёты</a>
 </body>
 
 </html>
