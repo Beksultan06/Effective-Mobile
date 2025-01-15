@@ -13,23 +13,20 @@ def order_list(request):
     """
     api_url = f"{settings.API_BASE_URL}/api/orders/"
     search_query = request.GET.get('search', '')
-    params = {
-        'search': search_query,
-    }
+    params = {'search': search_query}
 
     try:
         response = requests.get(api_url, params=params, timeout=5)
         response.raise_for_status()
         data = response.json()
-
-        # Выводим данные, чтобы увидеть, что приходит от API
         print("API Response:", data)
 
-        # Если data — это список, то присваиваем его переменной orders
         if isinstance(data, list):
             orders = data
         else:
             orders = data.get('results', [])
+        if search_query:
+            orders = [order for order in orders if search_query.lower() in str(order.get('items')).lower()]
 
     except requests.RequestException as e:
         print(f"Ошибка API: {e}")
@@ -39,6 +36,7 @@ def order_list(request):
         'orders': orders,
         'search_query': search_query,
     })
+
 
 def order_create(request):
     """
