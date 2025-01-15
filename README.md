@@ -62,3 +62,7 @@ python manage.py migrate
 
 6. Запуск сервера разработки
 python manage.py runserver
+
+7. Для тестирование, команды
+1. pytest
+2. python manage.py test
