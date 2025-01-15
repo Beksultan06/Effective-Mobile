@@ -37,10 +37,6 @@ def order_list(request):
         'status_filter': status_filter,
     })
 
-
-
-
-
 def order_create(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
