@@ -34,23 +34,21 @@ def order_list(request):
 
     return render(request, 'order/order_list.html', {
         'orders': orders,
-        'search_query': search_query,
-    })
+        'search_query': search_query,})
 
 
 def order_create(request):
-    """
-    Обрабатывает создание нового заказа
-    """
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save()
             return redirect('order-list')
+        else:
+            print("Ошибки формы:", form.errors)  # Вывод ошибок формы
     else:
         form = OrderForm()
-
     return render(request, 'order/order_create.html', {'form': form})
+
 
 def order_detail(request, pk):
     """
