@@ -63,18 +63,6 @@
         </tbody>
     </table>
 
-    <!-- Пагинация -->
-    <div class="pagination">
-        {% if prev_page %}
-        <a href="?page={{ prev_page }}&search={{ search_query }}">Предыдущая страница</a>
-        {% endif %}
-        
-        {% if next_page %}
-        <a href="?page={{ next_page }}&search={{ search_query }}">Следующая страница</a>
-        {% endif %}
-
-    </div>
-
     <a class="revenue" href="{% url 'revenue' %}">Подсчёты</a>
 </body>
 

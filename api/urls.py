@@ -4,7 +4,7 @@ from api.views.order import (OrderListApiView,
                              OrderUpdateAPIView,
                              OrderDestroyAPIView,
                              OrderRetrieveAPIView,
-                             PaidOrdersRevenueAPIView)
+                             PaidOrdersRevenueAPIView,)
 
 urlpatterns = [
     path('orders/', OrderListApiView.as_view(), name='order-list'),  # Список всех заказов

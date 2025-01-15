@@ -9,54 +9,36 @@ import requests
 
 def order_list(request):
     """
-    Отображает все заказы с использованием API с учетом пагинации.
+    Отображает все заказы с использованием API без пагинации.
     """
     api_url = f"{settings.API_BASE_URL}/api/orders/"
     search_query = request.GET.get('search', '')
-    current_page = int(request.GET.get('page', 1))  # Преобразуем в целое число
     params = {
         'search': search_query,
-        'page': current_page,  # Текущая страница
     }
 
     try:
         response = requests.get(api_url, params=params, timeout=5)
         response.raise_for_status()
         data = response.json()
-        orders = data.get('results', [])
 
-        # Обработка ссылок пагинации
-        next_page = data.get('next')  # Ссылка на следующую страницу
-        prev_page = data.get('previous')  # Ссылка на предыдущую страницу
+        # Выводим данные, чтобы увидеть, что приходит от API
+        print("API Response:", data)
 
-        # Если есть ссылка на следующую страницу, извлекаем номер страницы
-        if next_page:
-            next_page_params = urllib.parse.parse_qs(urllib.parse.urlparse(next_page).query)
-            next_page = next_page_params.get('page', [None])[0]
-
-        # Если есть ссылка на предыдущую страницу, извлекаем номер страницы
-        if prev_page:
-            prev_page_params = urllib.parse.parse_qs(urllib.parse.urlparse(prev_page).query)
-            prev_page = prev_page_params.get('page', [None])[0]
-
-        print(f"Обработанная следующая страница: {next_page}")
-        print(f"Обработанная предыдущая страница: {prev_page}")
+        # Если data — это список, то присваиваем его переменной orders
+        if isinstance(data, list):
+            orders = data
+        else:
+            orders = data.get('results', [])
 
     except requests.RequestException as e:
         print(f"Ошибка API: {e}")
         orders = []
-        next_page = prev_page = None
 
     return render(request, 'order/order_list.html', {
         'orders': orders,
         'search_query': search_query,
-        'next_page': next_page,
-        'prev_page': prev_page,
-        'current_page': current_page,  # Передаем текущую страницу для шаблона
     })
-
-
-
 
 def order_create(request):
     """

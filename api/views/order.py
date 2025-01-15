@@ -9,7 +9,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db import models
 
-from api.paginations import OrderPagination
 from app.cafe.models import Order
 from api.serializers import OrderSerializers
 
@@ -17,7 +16,6 @@ class OrderListApiView(ListAPIView):
     serializer_class = OrderSerializers
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['table_number', 'status']
-    pagination_class = OrderPagination
 
     def get_queryset(self):
         sort_field = self.request.GET.get('sort', 'id')
