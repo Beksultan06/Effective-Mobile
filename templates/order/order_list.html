@@ -1,69 +1,85 @@
-{% load static %}
+{% extends 'includes/homepage.html' %}
+{%load static%}
+{%block content%}
 
-<!DOCTYPE html>
-<html lang="ru">
+    <header class="header">
+        <h1>Список заказов</h1>
+    </header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список заказов</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/order-list.css' %}">
-</head>
+    <main class="main-content">
+        <!-- Форма фильтрации -->
+        <form method="get" action="{% url 'order-list' %}" class="search-form">
+            <input type="text" name="search" placeholder="Поиск по номеру стола" value="{{ search_query }}"
+                class="search-input">
+            <select name="status" id="status">
+                {% if order.status == 'pending' %}
+                <option value="pending" selected>В ожидании</option>
+                {% elif order.status == 'ready' %}
+                <option value="ready" selected>Готово</option>
+                {% elif order.status == 'paid' %}
+                <option value="paid" selected>Оплачено</option>
+                {% endif %}
+                <option value="pending">В ожидании</option>
+                <option value="ready">Готово</option>
+                <option value="paid">Оплачено</option>
+            </select>
+            <button type="submit" class="search-button">Поиск</button>
+        </form>
 
-<body>
-    <h1>Список заказов</h1>
-    <form method="get" action="{% url 'order-list' %}">
-        <input type="text" name="search" placeholder="Поиск по номеру стола или статусу" value="{{ search_query }}">
-        <button type="submit">Поиск</button>
-    </form>
-    <a href="{% url 'order-create' %}" class="create-order">Создать новый заказ</a>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Номер стола</th>
-                <th>Блюда</th>
-                <th>Сумма</th>
-                <th>Статус</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if orders %}
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.table_number }}</td>
-                <td>
-                    {% for item in order.items %}
-                    {{ item.name }}: {{ item.price }}<br>
-                    {% endfor %}
-                </td>
-                <td>{{ order.total_price }}</td>
-                <td>{{ order.status }}</td>
-                <td>
-                    {% if order.id %}
-                    <a href="{% url 'order-update' order.id %}">Обновить</a>
-                    <br>
-                    <a href="{% url 'order-delete' order.id %}">Удалить</a>
-                    <br>
-                    <a href="{% url 'order-detail' order.id %}">Просмотреть детально</a>
-                    {% else %}
-                    <span>Нет действий</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-            {% else %}
-            <tr>
-                <td colspan="6" class="no-orders">Нет заказов, соответствующих вашему запросу.</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+        <div class="actions">
+            <a href="{% url 'order-create' %}" class="button create-order">Создать новый заказ</a>
+        </div>
 
-    <a class="revenue" href="{% url 'revenue' %}">Подсчёты</a>
-</body>
+        <!-- Таблица заказов -->
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Номер стола</th>
+                    <th>Блюда</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if orders %}
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.table_number }}</td>
+                    <td>
+                        {% for item in order.items %}
+                        <div class="item">
+                            <span class="item-name">{{ item.name }}</span>:
+                            <span class="item-price">{{ item.price }}</span>
+                        </div>
+                        {% endfor %}
+                    </td>
+                    <td>{{ order.total_price }}</td>
+                    <td class="status {{ order.status }}">{{ order.status }}</td>
+                    <td class="actions">
+                        <a href="{% url 'order-update' order.id %}" class="button update-button">Обновить</a>
+                        <a href="{% url 'order-delete' order.id %}" class="button delete-button">Удалить</a>
+                        <a href="{% url 'order-detail' order.id %}" class="button detail-button">Просмотреть</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="6" class="no-orders">Нет заказов, соответствующих вашему запросу.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
 
-</html>
+        <div class="footer-actions">
+            <a href="{% url 'revenue' %}" class="button revenue-button">Подсчёты</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; {{ current_year }} Кафе Менеджмент</p>
+    </footer>
+
+{% endblock %}

@@ -6,27 +6,26 @@ from .forms import OrderForm
 from django.conf import settings
 import requests
 
-
 def order_list(request):
     """
     Отображает все заказы с использованием API без пагинации.
     """
     api_url = f"{settings.API_BASE_URL}/api/orders/"
     search_query = request.GET.get('search', '')
-    params = {'search': search_query}
+    status_filter = request.GET.get('status', '')  # Фильтрация по статусу
+    params = {}
+
+    if search_query:
+        params['search'] = search_query
+    if status_filter:
+        params['status'] = status_filter
 
     try:
         response = requests.get(api_url, params=params, timeout=5)
         response.raise_for_status()
         data = response.json()
-        print("API Response:", data)
 
-        if isinstance(data, list):
-            orders = data
-        else:
-            orders = data.get('results', [])
-        if search_query:
-            orders = [order for order in orders if search_query.lower() in str(order.get('items')).lower()]
+        orders = data.get('results', []) if not isinstance(data, list) else data
 
     except requests.RequestException as e:
         print(f"Ошибка API: {e}")
@@ -34,7 +33,12 @@ def order_list(request):
 
     return render(request, 'order/order_list.html', {
         'orders': orders,
-        'search_query': search_query,})
+        'search_query': search_query,
+        'status_filter': status_filter,
+    })
+
+
+
 
 
 def order_create(request):

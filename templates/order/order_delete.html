@@ -1,16 +1,6 @@
-{% load static %}
-
-
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Удаление заказа</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/order-delete.css' %}">
-</head>
+{% extends 'includes/homepage.html' %}
+{%load static%}
+{%block content%}
 
 <body>
     <h1>Удалить заказ #{{ order.id }}?</h1>
@@ -19,6 +9,5 @@
         <button type="submit">Да, удалить</button>
     </form>
     <a href="{% url 'order-list' %}">Отмена</a>
-</body>
 
-</html>
+{% endblock %}

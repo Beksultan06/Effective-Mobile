@@ -7,7 +7,6 @@ import json
 class OrderViewsTest(TestCase):
 
     def setUp(self):
-        # Создание тестового заказа
         self.order_data = {
             "table_number": 1,
             "items": [{"name": "Coffee", "price": 5.0}, {"name": "Cake", "price": 3.0}],
@@ -43,7 +42,7 @@ class OrderViewsTest(TestCase):
             'total_price': '8.0',
         }
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 302)  # Ожидаем редирект после успешного обновления
+        self.assertEqual(response.status_code, 302)
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'paid')
 
@@ -54,7 +53,7 @@ class OrderViewsTest(TestCase):
         """
         url = reverse('order-delete', kwargs={'pk': self.order.pk})
         response = self.client.post(url)
-        self.assertEqual(response.status_code, 302)  # Ожидаем редирект после удаления
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(Order.objects.count(), 0)
 
     @patch('requests.get')

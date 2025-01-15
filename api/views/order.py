@@ -8,18 +8,15 @@ from rest_framework.filters import SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db import models
-
 from app.cafe.models import Order
 from api.serializers import OrderSerializers
 
 class OrderListApiView(ListAPIView):
+    queryset = Order.objects.all()
     serializer_class = OrderSerializers
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = ['table_number', 'status']
-
-    def get_queryset(self):
-        sort_field = self.request.GET.get('sort', 'id')
-        return Order.objects.all().order_by(sort_field)
+    search_fields = ['table_number', 'items']
+    filterset_fields = ['status']
 
 class OrderCreateAPIView(CreateAPIView):
     queryset = Order.objects.all()
